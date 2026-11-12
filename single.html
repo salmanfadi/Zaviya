@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#031a18">
+    <title>You are selected</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Great+Vibes&display=swap">
+    <style>
+        :root {
+            --gold: #F1D58A;
+            --gold2: #C9A24B;
+            --ink: #031a18;
+            --ms: clamp(110px, 30vw, 170px)
+        }
+
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            background: #031a18;
+            overflow: hidden
+        }
+
+        body {
+            font-family: "Cormorant Garamond", Georgia, serif;
+            color: var(--gold)
+        }
+
+        #stage {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            background: var(--ink)
+        }
+
+        .bg {
+            position: absolute;
+            inset: 0;
+            background: url("Dark%20Green%20Islamic%20Lantern%20Background%20_%20Aesthetic%20Wallpapers.jpg") center/cover no-repeat;
+            opacity: 0;
+            filter: brightness(.3)
+        }
+
+        .vig {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 55%, transparent 45%, rgba(2, 18, 16, .55) 100%)
+        }
+
+        .lg {
+            position: absolute;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(255, 190, 90, .5), rgba(255, 190, 90, .14) 45%, transparent 70%);
+            mix-blend-mode: screen;
+            opacity: 0
+        }
+
+        .l1 {
+            left: 82%;
+            top: 25%;
+            width: max(120px, 40vw);
+            aspect-ratio: 1
+        }
+
+        .l2 {
+            left: 93%;
+            top: 47%;
+            width: max(70px, 24vw);
+            aspect-ratio: 1
+        }
+
+        .moonwrap {
+            position: absolute;
+            left: 12%;
+            top: calc(7% + env(safe-area-inset-top, 0px));
+            width: var(--ms);
+            height: var(--ms);
+            opacity: 0;
+            mix-blend-mode: screen
+        }
+
+        .halo {
+            position: absolute;
+            inset: -110%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 196, 102, .5), rgba(255, 180, 80, .14) 38%, transparent 68%);
+            mix-blend-mode: screen;
+            opacity: 0
+        }
+
+        .moon {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: block;
+            filter: brightness(.2);
+            -webkit-mask-image: radial-gradient(circle closest-side, #000 74%, transparent 85%);
+            mask-image: radial-gradient(circle closest-side, #000 74%, transparent 85%)
+        }
+
+        .col {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30vh 9vw 0;
+            padding-bottom: env(safe-area-inset-bottom, 0px)
+        }
+
+        .orn {
+            width: 150px;
+            opacity: 0
+        }
+
+        h1 {
+            margin: 6px 0 0;
+            font-weight: 400;
+            line-height: 1.05;
+            text-shadow: 0 2px 22px rgba(0, 0, 0, .6)
+        }
+
+        h1 span {
+            display: block;
+            opacity: 0
+        }
+
+        .a {
+            font-style: italic;
+            font-size: clamp(26px, 7vw, 40px);
+            color: var(--gold)
+        }
+
+        .b {
+            font-family: "Great Vibes", cursive;
+            font-size: clamp(54px, 16vw, 96px);
+            color: #F6E3A6
+        }
+
+        .msg {
+            margin: 12px 0 0;
+            font-size: clamp(17px, 4.4vw, 22px);
+            color: #CFE3D6;
+            opacity: 0;
+            line-height: 1.5;
+            text-shadow: 0 1px 12px rgba(0, 0, 0, .7)
+        }
+
+        .p {
+            position: absolute;
+            bottom: -10px;
+            border-radius: 50%;
+            background: var(--gold);
+            opacity: 0
+        }
+
+        #intro {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            background: var(--ink);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            border: 0;
+            width: 100%;
+            cursor: pointer;
+            font: inherit;
+            color: var(--gold);
+            transition: opacity 1s, visibility 1s
+        }
+
+        #intro .t {
+            font-style: italic;
+            font-size: 22px;
+            animation: pulse 2.4s ease-in-out infinite
+        }
+
+        #intro:focus-visible,
+        #mute:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 4px
+        }
+
+        #mute {
+            position: absolute;
+            right: 20px;
+            bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+            z-index: 6;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: .5px solid var(--gold2);
+            background: rgba(3, 26, 24, .55);
+            color: var(--gold);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center
+        }
+
+        .go #intro {
+            opacity: 0;
+            visibility: hidden
+        }
+
+        .go #mute {
+            display: flex
+        }
+
+        .go .bg {
+            animation: bgin 5s ease-out forwards
+        }
+
+        .go .moonwrap {
+            animation: moonin 7s ease-out .8s both
+        }
+
+        .go .moon {
+            animation: shine 7s ease-out .8s both
+        }
+
+        .go .halo {
+            animation: halo 8s ease-out .8s both, breathe 6s ease-in-out 8.8s infinite
+        }
+
+        .go .lg {
+            animation: lgin 3s ease 2s both, flick 3.2s ease-in-out 5s infinite
+        }
+
+        .go .orn {
+            animation: fade 1.2s ease 3.9s both
+        }
+
+        .go .a {
+            animation: up 1.4s ease 4.2s both
+        }
+
+        .go .b {
+            animation: up 1.6s ease 5s both
+        }
+
+        .go .msg {
+            animation: fade 1.6s ease 6.6s both
+        }
+
+        .go .p {
+            animation: rise linear infinite
+        }
+
+        @keyframes bgin {
+            to {
+                opacity: 1;
+                filter: brightness(1)
+            }
+        }
+
+        @keyframes moonin {
+            0% {
+                opacity: 0;
+                transform: translateY(24px) scale(.92)
+            }
+
+            100% {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        @keyframes shine {
+            0% {
+                filter: brightness(.2)
+            }
+
+            100% {
+                filter: brightness(1.05)
+            }
+        }
+
+        @keyframes halo {
+            0% {
+                opacity: 0;
+                transform: scale(.5)
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1)
+            }
+        }
+
+        @keyframes breathe {
+            50% {
+                opacity: .72;
+                transform: scale(1.06)
+            }
+        }
+
+        @keyframes lgin {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes flick {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            35% {
+                opacity: .7
+            }
+
+            60% {
+                opacity: .92
+            }
+        }
+
+        @keyframes fade {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes up {
+            0% {
+                opacity: 0;
+                transform: translateY(14px);
+                filter: blur(6px)
+            }
+
+            100% {
+                opacity: 1;
+                transform: none;
+                filter: blur(0)
+            }
+        }
+
+        @keyframes rise {
+            0% {
+                opacity: 0;
+                transform: translateY(0)
+            }
+
+            15% {
+                opacity: .7
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-70vh) translateX(24px)
+            }
+        }
+
+        @keyframes pulse {
+            50% {
+                opacity: .45
+            }
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+            * {
+                animation-duration: .01ms !important;
+                animation-delay: 0s !important;
+                animation-iteration-count: 1 !important
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="stage">
+        <div class="bg"></div>
+        <div class="lg l1"></div>
+        <div class="lg l2"></div>
+        <div class="vig"></div>
+        <div class="moonwrap">
+            <div class="halo"></div>
+            <svg class="moon" viewBox="0 0 200 200" aria-label="Moon" role="img">
+                <defs>
+                    <radialGradient id="mb" cx="38%" cy="35%" r="75%">
+                        <stop offset="0" stop-color="#FFE9A8" />
+                        <stop offset=".6" stop-color="#F0BE58" />
+                        <stop offset="1" stop-color="#A8742A" />
+                    </radialGradient>
+                    <radialGradient id="sh" cx="35%" cy="35%" r="80%">
+                        <stop offset=".55" stop-color="#05110f" stop-opacity="0" />
+                        <stop offset="1" stop-color="#05110f" stop-opacity=".7" />
+                    </radialGradient>
+                    <filter id="tex">
+                        <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="5" seed="7" result="n" />
+                        <feDiffuseLighting in="n" surfaceScale="3" diffuseConstant="1" lighting-color="#fff">
+                            <feDistantLight azimuth="225" elevation="55" />
+                        </feDiffuseLighting>
+                    </filter>
+                    <filter id="bl">
+                        <feGaussianBlur stdDeviation="5" />
+                    </filter>
+                    <clipPath id="mc">
+                        <circle cx="100" cy="100" r="80" />
+                    </clipPath>
+                </defs>
+                <g clip-path="url(#mc)">
+                    <circle cx="100" cy="100" r="80" fill="url(#mb)" />
+                    <g filter="url(#bl)" fill="#9A6F2A" opacity=".5">
+                        <ellipse cx="78" cy="78" rx="22" ry="17" />
+                        <ellipse cx="120" cy="68" rx="16" ry="13" />
+                        <ellipse cx="95" cy="120" rx="26" ry="14" />
+                        <ellipse cx="130" cy="112" rx="12" ry="16" />
+                    </g>
+                    <rect x="20" y="20" width="160" height="160" filter="url(#tex)" style="mix-blend-mode:multiply"
+                        opacity=".55" />
+                    <g fill="none" stroke="#8A5F22" stroke-width="1.2" opacity=".35">
+                        <circle cx="70" cy="125" r="7" />
+                        <circle cx="132" cy="90" r="5" />
+                        <circle cx="108" cy="52" r="4" />
+                        <circle cx="145" cy="132" r="6" />
+                        <circle cx="58" cy="88" r="3.5" />
+                    </g>
+                    <circle cx="100" cy="100" r="80" fill="url(#sh)" />
+                </g>
+            </svg>
+        </div>
+        <div class="col">
+            <svg class="orn" viewBox="0 0 150 12" aria-hidden="true">
+                <g stroke="#C9A24B" stroke-width=".6">
+                    <line x1="0" y1="6" x2="62" y2="6" />
+                    <line x1="88" y1="6" x2="150" y2="6" />
+                </g>
+                <path d="M75 0L81 6L75 12L69 6Z" fill="#F1D58A" />
+            </svg>
+            <h1><span class="a">You are</span><span class="b">selected</span></h1>
+            <p class="msg"></p>
+        </div>
+        <button id="mute" aria-label="Mute music" type="button"><svg width="18" height="18" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 9v6h4l5 4V5L8 9z" />
+                <path id="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11" />
+            </svg></button>
+        <button id="intro" type="button" aria-label="Tap to open the invitation"><svg width="40" height="12"
+                viewBox="0 0 150 12" aria-hidden="true">
+                <path d="M75 0L81 6L75 12L69 6Z" fill="currentColor" />
+            </svg><span class="t">Tap to open</span></button>
+    </div>
+    <script>
+        var stage = document.getElementById('stage'), intro = document.getElementById('intro'), mute = document.getElementById('mute'), wave = document.getElementById('wave');
+        var TRACK = "Shah%20CM%20Wali%20Madavoori%20Harmonium%20Version.mp3", ctx = null, master = null, aud = null, on = true, LEVEL = .35;
+        for (var i = 0; i < 22; i++) { var s = document.createElement('i'); s.className = 'p'; var z = 2 + Math.random() * 3; s.style.cssText = 'left:' + (Math.random() * 100) + '%;width:' + z + 'px;height:' + z + 'px;animation-duration:' + (9 + Math.random() * 9) + 's;animation-delay:' + (3 + Math.random() * 9) + 's'; stage.appendChild(s) }
+        function startAudio() {
+            if (TRACK) { aud = new Audio(TRACK); aud.loop = true; aud.volume = 0; aud.play().catch(function () { }); var v = 0, t = setInterval(function () { v += .02; if (v >= LEVEL) { v = LEVEL; clearInterval(t) } aud.volume = v }, 100); return }
+            try {
+                var AC = window.AudioContext || window.webkitAudioContext; ctx = new AC(); master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
+                master.gain.linearRampToValueAtTime(LEVEL, ctx.currentTime + 3);
+                [110, 164.81, 220, 277.18].forEach(function (f, i) {
+                    var o = ctx.createOscillator(), g = ctx.createGain(), l = ctx.createOscillator(), lg = ctx.createGain();
+                    o.type = 'sine'; o.frequency.value = f; g.gain.value = .07; l.frequency.value = .06 + i * .03; lg.gain.value = .035;
+                    l.connect(lg); lg.connect(g.gain); o.connect(g); g.connect(master); o.start(); l.start()
+                });
+                var p = [440, 493.88, 554.37, 659.25, 739.99];
+                (function bell() {
+                    var t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+                    o.type = 'sine'; o.frequency.value = p[Math.floor(Math.random() * p.length)];
+                    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.08, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + 3.2);
+                    o.connect(g); g.connect(master); o.start(t); o.stop(t + 3.4);
+                    setTimeout(bell, 2500 + Math.random() * 3000)
+                })();
+            } catch (e) { ctx = null }
+        }
+        intro.addEventListener('click', function () { startAudio(); stage.classList.add('go') });
+        mute.addEventListener('click', function () {
+            on = !on; mute.setAttribute('aria-label', on ? 'Mute music' : 'Unmute music'); wave.style.display = on ? '' : 'none';
+            if (aud) aud.muted = !on;
+            if (ctx) { if (ctx.state === 'suspended') ctx.resume(); master.gain.setTargetAtTime(on ? LEVEL : 0, ctx.currentTime, .3) }
+        });
+    </script>
+</body>
+
+</html>
